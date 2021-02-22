@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flashlight/shadow test</title>
+    <style>
+        /* flashlight learned from http://youtu.be/SHRcgP_IZHI Power Of Light video from Online Tutorials */
+        html {
+            background-color: dimgray;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            margin: 0;
+        }
+        .dark {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #494949;
+        }
+        h1 {
+            text-shadow: 10px 10px 0 rgba(0,0,0,1);
+            font-size: 100px;
+            cursor: pointer;
+        }
+        .light {
+            position: fixed;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--x) var(--y), transparent 10%, rgba(0,0,0,0.95) 35%);
+        }
+        .blackScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: rgba(0,0,0,0.95);
+            transition: 0.3s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <div class="dark">
+        <h1>hello.</h1>
+    </div>
+    <div class="light">
+
+    </div>
+    <div class="blackScreen"></div>
+    <script>
+        // learned from Wes Bos Javascript 30- day 16 text shadow mouse move
+        const body = document.querySelector('body');
+        const dark = document.querySelector('.dark');
+        const text = dark.querySelector('h1');
+        const walk = 100;
+
+        function shadow(e) {
+            const { offsetWidth: width, offsetHeight: height } = dark;
+            let { offsetX: x, offsetY: y } = e;
+            if (this !== e.target) {
+                x = x + e.target.offsetLeft;
+                y = y + e.target.offsetTop;
+            }
+            const xWalk = Math.round((x / width * walk) - (walk / 2));
+            const yWalk = Math.round((y / height * walk) - (walk / 2));
+            text.style.textShadow = `${xWalk * -1}px ${yWalk * -1}px 4px rgba(0,0,0,0.7)`;
+        }
+        function flashlight(){
+            let black = document.querySelector('.blackScreen');
+            black.classList.toggle('blackScreen');
+            let pos = document.documentElement;
+        pos.addEventListener('mousemove', e => {
+            pos.style.setProperty('--x', e.clientX + 'px')
+            pos.style.setProperty('--y', e.clientY + 'px')
+        }
+        )};
+        body.addEventListener('click', flashlight);
+
+        dark.addEventListener('mousemove', shadow);
+    </script>
+</body>
+</html>
